@@ -1,10 +1,11 @@
 [package]
 name = "scoped-vec"
-version = "0.1.0"
+version = "0.0.1"
+description = "A library for scoped Vecs, allowing multi-level divergence from the root element."
 authors = ["Jordan Doyle <jordan@doyle.la>"]
 edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+license = "WTFPL OR 0BSD"
+repository = "https://github.com/w4/scoped-vec.rs"
 
 [dependencies]
-owning_ref = ""
+owning_ref = "0.4.0"
