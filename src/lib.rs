@@ -194,4 +194,46 @@ mod tests {
             assert_eq!(iter.next(), None);
         }
     }
+
+    #[test]
+    fn diverged_scopes_can_be_read() {
+        let mut root = ScopedVec::new();
+        root.push(3);
+
+        let mut scoped = root.scope();
+        scoped.push(4);
+
+        let mut nested_scoped1 = scoped.scope();
+        nested_scoped1.push(5);
+
+        let mut nested_scoped2 = scoped.scope();
+        nested_scoped2.push(6);
+
+        let mut iter = root.iter();
+        assert_eq!(iter.next(), Some(&3));
+        assert_eq!(iter.next(), Some(&4));
+        assert_eq!(iter.next(), Some(&5));
+        assert_eq!(iter.next(), Some(&6));
+        assert_eq!(iter.next(), None);
+    }
+
+    #[test]
+    fn diverged_adjacent_scopes_cant_interact() {
+        let mut root = ScopedVec::new();
+        root.push(3);
+
+        let mut scoped1 = root.scope();
+        scoped1.push(4);
+
+        let mut scoped2 = root.scope();
+        scoped2.push(5);
+
+        let mut iter = scoped1.iter();
+        assert_eq!(iter.next(), Some(&4));
+        assert_eq!(iter.next(), None);
+
+        let mut iter = scoped2.iter();
+        assert_eq!(iter.next(), Some(&5));
+        assert_eq!(iter.next(), None);
+    }
 }
